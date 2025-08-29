@@ -1,7 +1,19 @@
 <?php
 class PostsController extends AppController{
-    public $helpers = array('Html', 'Form', 'Flash');
+    public $helpers = array('Html', 'Form', 'Flash', 'Session');
     public $components = array('Flash');
+
+    public function isAuthorized($user){
+        if ($this->action === 'add'){
+            return true;
+        }
+
+        if (in_array($this->action, array('edit', 'delete'))){
+            $postId = (int)$this->request->params['pass'][0];
+            if ($this->Post->isOwnedBy($postId, $user['id'])) return true;
+        }
+        return parent::isAuthorized($user);
+    }
 
     public function index(){
         $this->set('posts', $this->Post->find('all'));
@@ -21,6 +33,7 @@ class PostsController extends AppController{
     public function add(){
         if ($this->request->is('post')){
             // if post request try to save the data
+            $this->request->data['Post']['user_id'] = $this->Auth->user('id');
             $this->Post->create();
             if ($this->Post->save($this->request->data)){
                 $this->Flash->success(__('Your post has been saved.'));

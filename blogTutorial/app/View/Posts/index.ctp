@@ -15,6 +15,7 @@ echo $this->Html->link('Add Post', array('controller' => 'posts', 'action'=> 'ad
             $this->Html->link( $post['Post']['title'], array('controller'=> 'posts', 'action' => 'view', $post['Post']['id']));
         ?></td>
         <td><?php echo $post['Post']['created']; ?></td>
+        <?php if ($this->Session->read('Auth.User.id') == $post['Post']['user_id']):?>
         <td>
             <?php
             echo $this->Html->link('Edit', array('action'=>'edit', $post['Post']['id']));
@@ -29,6 +30,7 @@ echo $this->Html->link('Add Post', array('controller' => 'posts', 'action'=> 'ad
             array('confirm'=>'Are you sure?'))
             ?>
         </td>
+        <?php endif;?>
     </tr>
     <?php endforeach; ?>
     <?php unset($post);?> <!-- clear data, delete post variable  -->

@@ -1,0 +1,1 @@
+<h1> <?php echo 'User page: ' . h($user['User']['username']); ?></h1>
